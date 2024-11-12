@@ -1,6 +1,6 @@
 from pyswip import Prolog
 import unicodedata
-import base64
+import json
 
 prolog = Prolog()
 prolog.consult("./baseDeConhecimento.pl")
@@ -48,8 +48,6 @@ def buscar_informacoes(problema):
 
       # buscando problemas com a palavra chave 
       problema_list = [resultado["Problemas"] for resultado in prolog.query(query)]
-
-
       problema_query=[]
       # percorrer o resultado, para decodificar a string para utf-8 se for byte
       for p in problema_list:
@@ -61,16 +59,24 @@ def buscar_informacoes(problema):
 
       # buscando descricao a partir do problema
       descricao_query = [resultado["Descricao"] for resultado in prolog.query(query)]
+
       causas_query = []
       # percorrer para decodificar para utf-8
       for c in listar_causas(item): 
-         causas_query.append(c.decode('utf-8'))
+         if isinstance (c, bytes):
+            str_decode = c.decode('utf-8')
+            causas_query.append(str_decode)
+         else: 
+            causas_query.append(c)
 
       solucao_query = []
       # buscando descricao a partir do problema
       # percorrer para decodificar para utf-8
       for s in listar_solucoes(item):
-         solucao_query.append(s.decode('utf-8'))
+         if isinstance (s, bytes):
+            solucao_query.append(s.decode('utf-8'))
+         else:
+            solucao_query.append(s)
 
       # salvando para responsta para o front-end
       infos.append({
@@ -96,4 +102,8 @@ def listar_solucoes(problema):
     query = f"solucao(Problemas, Solucao), member({problema}, Problemas)"
     solucoes = [solucao["Solucao"] for solucao in prolog.query(query)]
     return solucoes
+
+
+print(buscar_informacoes("teste"))
+
 
