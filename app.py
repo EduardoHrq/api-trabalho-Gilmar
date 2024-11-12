@@ -52,10 +52,7 @@ def buscar_informacoes(problema):
       # percorrer o resultado, para decodificar a string para utf-8 se for byte
       for p in problema_list:
          for problem in p:
-            if isinstance(problem, bytes):
-               problema_query.append(problem.decode('utf-8'))
-            else:
-               problema_query.append(problem)
+               problema_query.append(problem.encode('latin1').decode('utf-8'))
 
       # buscando descricao a partir do problema
       descricao_query = [resultado["Descricao"] for resultado in prolog.query(query)]
@@ -63,26 +60,19 @@ def buscar_informacoes(problema):
       causas_query = []
       # percorrer para decodificar para utf-8
       for c in listar_causas(item): 
-         if isinstance (c, bytes):
-            str_decode = c.decode('utf-8')
-            causas_query.append(str_decode)
-         else: 
-            causas_query.append(c)
+            causas_query.append(c.encode('latin1').decode('utf-8'))
 
       solucao_query = []
       # buscando descricao a partir do problema
       # percorrer para decodificar para utf-8
       for s in listar_solucoes(item):
-         if isinstance (s, bytes):
-            solucao_query.append(s.decode('utf-8'))
-         else:
-            solucao_query.append(s)
+            solucao_query.append(s.encode('latin1').decode('utf-8'))
 
       # salvando para responsta para o front-end
       infos.append({
          "palavra_chave": item,
          "problema": problema_query,
-         "descricao": descricao_query[0].decode('utf-8'),
+         "descricao": descricao_query[0].encode('latin1').decode('utf-8'),
          "causas": causas_query,
          "solucoes": solucao_query
       })
@@ -104,6 +94,8 @@ def listar_solucoes(problema):
     return solucoes
 
 
-print(buscar_informacoes("teste"))
+# print(buscar_informacoes("teste"))
 
+# for d in prolog.query("problema(Problemas, X), member(teste, Problemas)"):
+   #  print(d['X'].encode('latin1').decode('utf-8'))
 
