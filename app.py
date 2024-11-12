@@ -94,8 +94,4 @@ def listar_solucoes(problema):
     return solucoes
 
 
-# print(buscar_informacoes("teste"))
-
-# for d in prolog.query("problema(Problemas, X), member(teste, Problemas)"):
-   #  print(d['X'].encode('latin1').decode('utf-8'))
 
